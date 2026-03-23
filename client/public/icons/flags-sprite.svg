@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="flag-jp" viewBox="0 0 900 600">
+    <rect width="900" height="600" fill="#fff"/>
+    <circle cx="450" cy="300" r="150" fill="#bc002d"/>
+  </symbol>
+  <symbol id="flag-us" viewBox="0 0 60 30">
+    <rect width="60" height="30" fill="#b22234"/>
+    <rect y="5" width="60" height="5" fill="#fff"/>
+    <rect y="15" width="60" height="5" fill="#fff"/>
+    <rect y="25" width="60" height="5" fill="#fff"/>
+    <rect width="26" height="14" fill="#3c3b6e"/>
+  </symbol>
+  <symbol id="flag-kr" viewBox="0 0 900 600">
+    <rect width="900" height="600" fill="#fff"/>
+    <circle cx="450" cy="300" r="150" fill="#c60c30"/>
+  </symbol>
+  <symbol id="flag-cn" viewBox="0 0 900 600">
+    <rect width="900" height="600" fill="#de2910"/>
+    <circle cx="150" cy="150" r="40" fill="#ffde00"/>
+  </symbol>
+  <symbol id="flag-es" viewBox="0 0 900 600">
+    <rect width="900" height="200" y="0" fill="#c60b1e"/>
+    <rect width="900" height="200" y="200" fill="#f1bf00"/>
+    <rect width="900" height="200" y="400" fill="#c60b1e"/>
+  </symbol>
+</svg>

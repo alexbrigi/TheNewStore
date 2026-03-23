@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  role      Role     @default(USER)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders    Order[]
+  cart      CartItem[]
+
+  @@map("users")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  image       String?
+  color       String?   // Color de acento de cada categoría (ej: "#EF4444" para Pokémon)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  products    Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Float
+  stock       Int      @default(0)
+  images      String[] // Array de URLs de imágenes
+  language    Language @default(ENGLISH)
+  featured    Boolean  @default(false)
+  isNew       Boolean  @default(false)
+  discount    Int?     // % descuento
+  preorder    Boolean  @default(false)
+  releaseDate DateTime?
+  categoryId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category    Category   @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
+  backInStockRequests BackInStockRequest[]
+
+  @@map("products")
+}
+
+enum Language {
+  JAPANESE
+  ENGLISH
+  KOREAN
+  CHINESE
+  SPANISH
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  quantity  Int     @default(1)
+  userId    String
+  productId String
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("cart_items")
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  userId      String
+  total       Float
+  status      OrderStatus @default(PENDING)
+  address     String
+  city        String
+  postalCode  String
+  phone       String
+  notes       String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id])
+  items       OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  quantity  Int
+  price     Float   // Precio en el momento de la compra
+  orderId   String
+  productId String
+
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model BackInStockRequest {
+  id        String   @id @default(cuid())
+  productId String
+  email     String
+  createdAt DateTime @default(now())
+
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("back_in_stock_requests")
+}
