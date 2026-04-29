@@ -104,6 +104,8 @@ model CartItem {
 model Order {
   id          String      @id @default(cuid())
   userId      String
+  subtotal    Float       @default(0)
+  shipping    Float       @default(0)
   total       Float
   status      OrderStatus @default(PENDING)
   address     String

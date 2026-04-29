@@ -4,6 +4,11 @@ import { Link } from 'react-router-dom';
 
 const CartDrawer = ({ open, onClose }) => {
   const { items, totalItems, totalPrice, clearCart } = useCart();
+  const freeShippingThreshold = 150;
+  const remaining = Math.max(0, freeShippingThreshold - totalPrice);
+  const shipping = totalPrice >= freeShippingThreshold ? 0 : 6;
+  const totalWithShipping = totalPrice + shipping;
+  const progress = Math.min(100, (totalPrice / freeShippingThreshold) * 100);
 
   return (
     <>
@@ -63,13 +68,26 @@ const CartDrawer = ({ open, onClose }) => {
         {/* Footer */}
         {items.length > 0 && (
           <div className="p-5 border-t border-gray-100 dark:border-slate-800">
+            <div className="mb-4">
+              <div className="text-xs font-semibold text-gray-700 dark:text-slate-300 mb-2">
+                {remaining > 0 ? `Estas a ${remaining.toFixed(2)}€ del envio gratuito.` : 'Envio gratuito desbloqueado.'}
+              </div>
+              <div className="h-1.5 rounded-full bg-gray-100 dark:bg-slate-800 overflow-hidden">
+                <div className="h-full bg-primary-600" style={{ width: `${progress}%` }} />
+              </div>
+            </div>
+
             <div className="flex justify-between mb-1 text-sm text-gray-500 dark:text-slate-400">
               <span>Subtotal</span>
               <span>{totalPrice.toFixed(2)}€</span>
             </div>
+            <div className="flex justify-between mb-1 text-sm text-gray-500 dark:text-slate-400">
+              <span>Envio</span>
+              <span>{shipping === 0 ? 'Gratis' : `${shipping.toFixed(2)}€`}</span>
+            </div>
             <div className="flex justify-between mb-4 font-bold text-gray-900 dark:text-white">
               <span>Total</span>
-              <span className="text-primary-600 text-lg">{totalPrice.toFixed(2)}€</span>
+              <span className="text-primary-600 text-lg">{totalWithShipping.toFixed(2)}€</span>
             </div>
             <Link
               to="/checkout"

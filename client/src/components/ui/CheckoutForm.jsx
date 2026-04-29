@@ -2,7 +2,20 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 import api from '../../services/api.js';
 
-export default function CheckoutForm({ clientSecret, orderId }) {
+const CheckoutForm = ({ clientSecret, orderId, uiOnly = false, containerClassName, buttonClassName }) => {
+  if (uiOnly) return <CheckoutFormUiOnly containerClassName={containerClassName} buttonClassName={buttonClassName} />;
+
+  return (
+    <StripeCheckoutForm
+      clientSecret={clientSecret}
+      orderId={orderId}
+      containerClassName={containerClassName}
+      buttonClassName={buttonClassName}
+    />
+  );
+};
+
+const StripeCheckoutForm = ({ clientSecret, orderId, containerClassName, buttonClassName }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -32,12 +45,55 @@ export default function CheckoutForm({ clientSecret, orderId }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="card p-4">
+    <form onSubmit={handleSubmit} className={containerClassName || 'card p-4'}>
       <label className="block mb-2">Tarjeta</label>
       <div className="border rounded p-3 mb-4">
         <CardElement options={{ hidePostalCode: true }} />
       </div>
-      <button disabled={!stripe || loading} className="btn-primary">{loading ? 'Procesando...' : 'Pagar'}</button>
+      <button
+        disabled={!stripe || loading}
+        className={buttonClassName || 'btn-primary'}
+      >
+        {loading ? 'Procesando...' : 'Pagar'}
+      </button>
     </form>
   );
-}
+};
+
+const CheckoutFormUiOnly = ({ containerClassName, buttonClassName }) => (
+  <form className={containerClassName || 'card p-4'}>
+    <label className="block mb-2">Tarjeta</label>
+    <div className="border border-white/10 rounded p-3 mb-4 bg-slate-900">
+      <div className="grid gap-3">
+        <input
+          type="text"
+          placeholder="Numero de tarjeta"
+          className="w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-500"
+          disabled
+        />
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            type="text"
+            placeholder="MM/AA"
+            className="w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-500"
+            disabled
+          />
+          <input
+            type="text"
+            placeholder="CVC"
+            className="w-full rounded border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder-slate-500"
+            disabled
+          />
+        </div>
+      </div>
+    </div>
+    <button
+      disabled
+      className={buttonClassName || 'btn-primary opacity-60'}
+    >
+      Pago en pruebas
+    </button>
+  </form>
+);
+
+export default CheckoutForm;

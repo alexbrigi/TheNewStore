@@ -19,6 +19,7 @@ import Checkout from './pages/Checkout.jsx';
 import AdminClients from './pages/admin/Clients.jsx';
 import AdminRevenue from './pages/admin/Revenue.jsx';
 import Profile from './pages/Profile.jsx';
+import Contact from './pages/Contact.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
                 <Route path="registro" element={<Register />} />
                 <Route path="perfil" element={<Profile />} />
                 <Route path="checkout" element={<Checkout />} />
+                <Route path="contacto" element={<Contact />} />
 
                 {/* Rutas Admin */}
                 <Route

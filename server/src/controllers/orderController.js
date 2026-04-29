@@ -23,12 +23,16 @@ export const createOrder = async (req, res, next) => {
       }
     }
 
-    const total = cartItems.reduce((acc, i) => acc + i.product.price * i.quantity, 0);
+    const subtotal = cartItems.reduce((acc, i) => acc + i.product.price * i.quantity, 0);
+    const shipping = subtotal >= 150 ? 0 : 6;
+    const total = subtotal + shipping;
 
     const order = await prisma.$transaction(async (tx) => {
       const newOrder = await tx.order.create({
         data: {
           userId: req.user.id,
+          subtotal,
+          shipping,
           total,
           address,
           city,
