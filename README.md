@@ -75,15 +75,7 @@ npm run dev
 ```
 
 ---
-
-## 🔑 Credenciales de administrador (seed)
-
-| Campo | Valor |
-|-------|-------|
-| Email | admin@admin |
-| Password | adminadmin |
-
-> ⚠️ Cambia la contraseña en producción.
+n.
 
 ---
 
